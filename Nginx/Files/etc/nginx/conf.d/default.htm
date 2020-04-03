@@ -1,0 +1,37 @@
+server {
+    listen       80;
+    server_name  HOSTNAME;
+
+    root   /var/www;
+    index  maintenance.html index.htm index.html;
+
+
+    location / {
+	try_files $uri $uri/ =404;
+    }
+    error_log   /dev/stdout  info;
+    access_log  /dev/stdout;
+
+    # redirect server error pages
+    error_page  404    /404.html;
+    location = /404.html {
+        root /var/www/error/;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /var/www/error/;
+    }
+
+    location ~* \.(jpg|jpeg|gif|png|css|js|ico|webp|tiff|ttf|svg)$ {
+        expires           5d;
+    }
+
+    # deny access to . files, for security
+    #
+    location ~ /\. {
+        log_not_found off; 
+        deny all;
+    }
+}
+

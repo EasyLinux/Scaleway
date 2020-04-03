@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ "$CONF" = "FPM" ];then
+  echo "Fpm -> default.fpm"
+  mv /etc/nginx/conf.d/default.fpm /etc/nginx/conf.d/default.conf
+  # Configure Nginx with env
+  sed -i "s/HOSTNAME/$(hostname)/g" /etc/nginx/conf.d/default.conf
+  sed -i "s/FPM/$FPM_HOST/g" /etc/nginx/conf.d/default.conf
+elif [ "$CONF" = "DAV" ];then
+  echo "Dav -> default.dav"
+  mv /etc/nginx/conf.d/default.dav /etc/nginx/conf.d/default.conf
+  # Configure Nginx with env
+  sed -i "s/HOSTNAME/$(hostname)/g" /etc/nginx/conf.d/default.conf
+  sed -i "s/FPM/$FPM_HOST/g" /etc/nginx/conf.d/default.conf
+elif [ "$CONF" = "SPECIAL" ];then
+  echo "Special -> read special conf file"
+  mv /var/www/.nginx/default.conf /etc/nginx/conf.d/default.conf
+  sed -i "s/FPM/$FPM_HOST/g" /etc/nginx/conf.d/default.conf
+else
+  echo "Htm -> default.htm"
+  mv /etc/nginx/conf.d/default.htm /etc/nginx/conf.d/default.conf
+  # Configure Nginx with env
+  sed -i "s/HOSTNAME/$(hostname)/g" /etc/nginx/conf.d/default.conf
+fi
+# launch nginx
+echo "Lance Nginx"
+exec nginx -g 'daemon off;'
